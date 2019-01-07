@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="proxyBean" class="com.demo.domain.proxy.DynamicProxyHandle">
+        <property name="interFaceProxy">
+            <value>com.reflex.test.Master</value>
+        </property>
+        <property name="proxyid" ref="hostess"></property>
+    </bean>
+    <bean id="master" class="com.reflex.test.Master">
+
+    </bean>
+    <bean id="hostess" class="com.reflex.test.Hostess">
+
+    </bean>
+</beans>
