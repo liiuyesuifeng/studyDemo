@@ -2,25 +2,44 @@ package com.utils;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 public class PrintUtil {
     public static void print(Object ob) {
         System.out.println(ob);
     }
 
-    public static <T> void print(Collection<T> ob) {
-        StringBuffer sb = new StringBuffer();
-        for (T t : ob) {
-            sb.append(t.toString() + "|");
+    public static <T> void print(Collection<T> con) {
+        print(getCollectionPrintStr(con));
+    }
+
+    public static void print(Iterator it) {
+        StringBuilder sb = new StringBuilder();
+        while (it.hasNext()) {
+            sb.append(it.next() + "|");
         }
         print(sb.toString());
     }
 
-    public static <T> void print(T[] ts) {
-        print(Arrays.asList(ts));
+    public static <T> void print(T[] t) {
+        print(getArraysPrintStr(t));
     }
-    public static void PrintFileCollection(Collection<?> c){
-        print(fileFormat(c));
+
+    public static <T> String getCollectionPrintStr(Collection<T> con) {
+        StringBuffer strs = StringBufferFactory.getStrs();
+        for (T t : con) {
+            strs.append(t.toString() + "|");
+        }
+        return strs.toString();
+    }
+
+    public static <T> String getArraysPrintStr(T[] t) {
+        if (t instanceof Object) {
+            List<T> ts = Arrays.asList(t);
+            return getCollectionPrintStr(ts);
+        }
+        return "";
     }
     public static String fileFormat(Collection<?> c){
         if(c.isEmpty() || c.size() == 0){
@@ -38,5 +57,10 @@ public class PrintUtil {
         }
         result.append("]");
         return result.toString();
+    }
+}
+class StringBufferFactory {
+    public static StringBuffer getStrs() {
+        return new StringBuffer();
     }
 }

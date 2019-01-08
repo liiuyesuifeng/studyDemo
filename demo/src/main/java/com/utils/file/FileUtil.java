@@ -1,17 +1,17 @@
-package com.utils;
+package com.utils.file;
 
-import com.utils.file.FileTreeInfo;
+
+import com.lhr.utils.PrintUtils;
+import org.junit.Test;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
-
 import java.util.regex.Pattern;
 
 public final class FileUtil {
-
     public static final String DEFAULT_PATH = "";
     public static final String DEFAULT_CODE_UTF8 = "UTF-8";
     public static final int DEFAULT_SIZE = 1024;
@@ -90,7 +90,7 @@ public final class FileUtil {
                 result.append(line + "\r\n");
             }
         } catch (IOException ioe) {
-            PrintUtil.print("IO创建异常");
+            PrintUtils.print("IO创建异常");
             ioe.printStackTrace();
         } finally {
             return result.toString();
@@ -166,7 +166,7 @@ public final class FileUtil {
             return true;
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            PrintUtil.print("创建IO失败，写入文件失败！");
+            PrintUtils.print("创建IO失败，写入文件失败！");
             return false;
         }
     }
@@ -248,19 +248,19 @@ public final class FileUtil {
         return moveFile(file, moveDir);
     }
 
-    @org.junit.Test
+    @Test
     public void test1() {
         File file = new File("D:\\TW\\hashMap.txt");
         String out = readFile(file);
-        PrintUtil.print(out);
+        PrintUtils.print(out);
     }
 
-    @org.junit.Test
+    @Test
     public void test2() {
         File file1 = new File("D:\\TW\\hashMap.txt");
         String out = readFile(file1);
         File file = new File("D:\\TW\\hashMap1.txt");
         boolean out1 = writerFile(file, out);
-        PrintUtil.print(out1);
+        PrintUtils.print(out1);
     }
 }
