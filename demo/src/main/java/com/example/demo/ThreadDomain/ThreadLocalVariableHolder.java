@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class ThreadLocalVariableHolder {
+    //声明互不干扰的线程变量
     private static ThreadLocal<Integer> value = new ThreadLocal<Integer>(){
         private Random rd = new Random(47);
         protected synchronized Integer initialValue(){

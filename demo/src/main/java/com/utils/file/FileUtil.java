@@ -1,7 +1,7 @@
 package com.utils.file;
 
 
-import com.lhr.utils.PrintUtils;
+import com.utils.PrintUtil;
 import org.junit.Test;
 
 import java.io.*;
@@ -90,7 +90,7 @@ public final class FileUtil {
                 result.append(line + "\r\n");
             }
         } catch (IOException ioe) {
-            PrintUtils.print("IO创建异常");
+            PrintUtil.print("IO创建异常");
             ioe.printStackTrace();
         } finally {
             return result.toString();
@@ -166,7 +166,7 @@ public final class FileUtil {
             return true;
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            PrintUtils.print("创建IO失败，写入文件失败！");
+            PrintUtil.print("创建IO失败，写入文件失败！");
             return false;
         }
     }
@@ -252,7 +252,7 @@ public final class FileUtil {
     public void test1() {
         File file = new File("D:\\TW\\hashMap.txt");
         String out = readFile(file);
-        PrintUtils.print(out);
+        PrintUtil.print(out);
     }
 
     @Test
@@ -261,6 +261,6 @@ public final class FileUtil {
         String out = readFile(file1);
         File file = new File("D:\\TW\\hashMap1.txt");
         boolean out1 = writerFile(file, out);
-        PrintUtils.print(out1);
+        PrintUtil.print(out1);
     }
 }
