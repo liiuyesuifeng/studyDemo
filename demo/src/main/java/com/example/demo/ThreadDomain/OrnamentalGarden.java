@@ -45,9 +45,9 @@ class Count{
 
     public synchronized int increment(){
         int temp = count;
-        if(rd.nextBoolean()){//随机返回一个boolean
-//            Thread.yield();//线程让步
-        }
+//        if(rd.nextBoolean()){//随机返回一个boolean
+////            Thread.yield();//线程让步
+//        }
         return (count = ++temp);
     }
     public synchronized int value(){
@@ -78,11 +78,12 @@ class Entrance implements Runnable{
         while(!canceled){
             synchronized (this){
                 ++number;
+                PrintUtil.print(this + "\tTotal" + count.increment());
             }
-            PrintUtil.print(this + "\tTotal" + count.increment());
+
             try{
                 //休眠线程千分之一秒* 100
-                TimeUnit.MILLISECONDS.sleep(100);
+                TimeUnit.MILLISECONDS.sleep(10);
             }catch (InterruptedException e){
                 e.printStackTrace();
                 PrintUtil.print("sleep interrupted");

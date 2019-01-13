@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class PrintUtil {
-    public static void print(Object ob) {
+    public synchronized static void print(Object ob) {
         System.out.println(ob);
     }
 
