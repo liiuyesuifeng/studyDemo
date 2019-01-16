@@ -17,7 +17,7 @@ public class PrintUtil {
     public static void print(Iterator it) {
         StringBuilder sb = new StringBuilder();
         while (it.hasNext()) {
-            sb.append(it.next() + "|");
+            sb.append(it.next());
         }
         print(sb.toString());
     }
@@ -29,7 +29,7 @@ public class PrintUtil {
     public static <T> String getCollectionPrintStr(Collection<T> con) {
         StringBuffer strs = StringBufferFactory.getStrs();
         for (T t : con) {
-            strs.append(t.toString() + "|");
+            strs.append(t.toString() );
         }
         return strs.toString();
     }
