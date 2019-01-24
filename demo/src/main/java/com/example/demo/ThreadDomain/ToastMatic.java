@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 吐司模型
  * 通过队列BlockQueue线程同步
+ * 同步队列在调用put时会释放放入对象的锁并唤醒其他操作这个对象的线程
  */
 public class ToastMatic {
     public static void main(String [] args) throws Exception{
@@ -19,16 +20,17 @@ public class ToastMatic {
                 butterQueue = new ToastQueue(),
                 finishedQueue = new ToastQueue();
         ExecutorService exec = Executors.newCachedThreadPool();
-        exec.execute(new Toaster(dryQueue));
         exec.execute(new Butterer(dryQueue,butterQueue));
+        exec.execute(new Toaster(dryQueue));
         exec.execute(new Jammer(butterQueue,finishedQueue));
         exec.execute(new Eater(finishedQueue));
-        TimeUnit.SECONDS.sleep(5);
+        TimeUnit.MILLISECONDS.sleep(100);
         exec.shutdownNow();
 
     }
 }
 class Toast{
+    //吐司三种状态 ：制作 涂抹 果酱
     public enum Staus{
         DRY,BUTTERRD,JAMMED
     }
@@ -58,6 +60,9 @@ class Toast{
 }
 class ToastQueue extends LinkedBlockingQueue<Toast>{}
 
+/**
+ * 制作吐司
+ */
 class Toaster implements Runnable{
     private ToastQueue toastQueue;
     private int count = 0;
@@ -69,9 +74,12 @@ class Toaster implements Runnable{
     public void run() {
         try{
             while(!Thread.interrupted()){
-                TimeUnit.MILLISECONDS.sleep(100 + rd.nextInt(500));
+                //休眠随机时间
+//                TimeUnit.MILLISECONDS.sleep(100 + rd.nextInt(500));
+                //制作吐司
                 Toast t = new Toast(count ++);
                 PrintUtil.print(t);
+                //放入队列尾部
                 toastQueue.put(t);
             }
         }catch (InterruptedException ie){
@@ -81,6 +89,7 @@ class Toaster implements Runnable{
 
     }
 }
+//涂抹黄油
 class Butterer implements Runnable{
     private ToastQueue dryQueue,butteredQueue;
     public Butterer(ToastQueue dry,ToastQueue buttered){
@@ -92,9 +101,12 @@ class Butterer implements Runnable{
     public void run() {
         try{
             while(!Thread.interrupted()){
+                //获取已经制作完成的吐司
                 Toast t = dryQueue.take();
+                //修改状态
                 t.butter();
                 PrintUtil.print(t);
+                //将吐司放入涂抹黄油完成的队列
                 butteredQueue.put(t);
             }
         }catch (InterruptedException ie){
