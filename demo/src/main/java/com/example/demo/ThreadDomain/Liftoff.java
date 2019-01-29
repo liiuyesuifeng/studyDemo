@@ -30,7 +30,7 @@ public class Liftoff implements Runnable {
 
     @Override
     public void run() {
-        Thread.currentThread().setPriority(priorty);
+//        Thread.currentThread().setPriority(priorty);
         while(countDown-- > 0){
             PrintUtil.print(toString());
 //            Thread.yield();
