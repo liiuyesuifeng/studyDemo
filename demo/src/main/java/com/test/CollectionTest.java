@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CollectionTest {
@@ -54,6 +55,14 @@ public class CollectionTest {
         parma.put("cc", "dd");
         Map<String, String> pa = new HashMap<>();
         pa.put("aa", "bb");
+    }
+
+    @Test
+    public void test5() {
+        Map<String,String> maps = new HashMap<>();
+        List<String> arr = new ArrayList<>();
+        arr.add("aa");
+        Map<String,String> maps1 = new ConcurrentHashMap<>();
     }
 }
 

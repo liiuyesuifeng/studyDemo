@@ -5,6 +5,7 @@ import com.utils.PrintUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -19,37 +20,57 @@ public class OrnamentalGarden {
     public static void main(String [] args) throws Exception{
         ExecutorService exec = Executors.newCachedThreadPool();
         //入口有5个
+        CountDownLatch latch = new CountDownLatch(100);
         for(int i =0;i < 5;i++){
-            exec.execute(new Entrance(i));
+            exec.execute(new Entrance(i,latch));
         }
+        exec.execute(new Count(latch));
         //线程休眠 秒*3
         TimeUnit.SECONDS.sleep(3);
         Entrance.cancel();
         //等待所有哦线程任务完成后关闭
         exec.shutdown();
         //主线程等待千分之一毫秒 * 250 返回当前线程池中是否还有运行的线程，没有返回true 否则返回fasle
-        if(!exec.awaitTermination(250,TimeUnit.MICROSECONDS)){
-            PrintUtil.print("Some task were not terminated");
-        }
-        PrintUtil.print("Total :" + Entrance.getTotalCount());
-        PrintUtil.print("Sum of Entrance : " + Entrance.sumEntrances());
+//        if(!exec.awaitTermination(250,TimeUnit.MICROSECONDS)){
+//            PrintUtil.print("Some task were not terminated");
+//        }
+//        PrintUtil.print("Total :" + Entrance.getTotalCount());
+//        PrintUtil.print("Sum of Entrance : " + Entrance.sumEntrances());
     }
 }
 
 /**
  * 统计类
  */
-class Count{
+class Count implements Runnable{
     private int count = 0;
-    private Random rd = new Random(47);
-
+    private final CountDownLatch latch;
+    public Count(CountDownLatch latch){
+        this.latch = latch;
+    }
     public synchronized int increment(){
         int temp = count;
 //        if(rd.nextBoolean()){//随机返回一个boolean
 ////            Thread.yield();//线程让步
 //        }
-        return (count = ++temp);
+        count = ++temp;
+        return count;
     }
+
+    @Override
+    public void run() {
+        try{
+            latch.await();
+            Entrance.cancel();
+//            Entrance.sumEntrances();
+//            PrintUtil.print("Total :" + Entrance.getTotalCount());
+            PrintUtil.print("Sum of Entrance : " + Entrance.sumEntrances());
+        }catch (Exception e){
+        }
+
+
+    }
+
     public synchronized int value(){
         return count;
     }
@@ -59,7 +80,8 @@ class Count{
  * 入口类
  */
 class Entrance implements Runnable{
-    private static Count count = new Count();
+    private final CountDownLatch latch;
+//    private static Count count;
     private static List<Entrance> entrances = new ArrayList<>();
     private int number = 0;
     private final int id;
@@ -68,8 +90,9 @@ class Entrance implements Runnable{
     public static void cancel(){
         canceled = true;
     }
-    public Entrance(int id){
+    public Entrance(int id,CountDownLatch latch){
         this.id = id;
+        this.latch = latch;
         entrances.add(this);
     }
 
@@ -78,7 +101,8 @@ class Entrance implements Runnable{
         while(!canceled){
             synchronized (this){
                 ++number;
-                PrintUtil.print(this + "\tTotal" + count.increment());
+                latch.countDown();
+                PrintUtil.print(this + "\t");
             }
 
             try{
@@ -94,9 +118,9 @@ class Entrance implements Runnable{
     public synchronized int getValue(){
         return number;
     }
-    public static int getTotalCount(){
-        return count.value();
-    }
+//    public static int getTotalCount(){
+////        return count.value();
+//    }
     public static int sumEntrances(){
         int sum = 0;
         for(Entrance entrance : entrances){

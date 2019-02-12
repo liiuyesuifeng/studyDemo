@@ -16,10 +16,8 @@ import java.nio.channels.FileLock;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPOutputStream;
 
@@ -338,19 +336,19 @@ public class FileTest {
     @Test
     public void test17() throws Exception{
         /**
-         * GZIP压缩和解压方法和正常流操作一
+         * GZIP压缩和解压方法和  正常流操作一
          * 只是在解压或者压缩时多了转换为GZIP的流过程
          */
         FileInputStream fis = new FileInputStream(FileUtil.DEFAULT_PATH + "\\index1.html");
         InputStreamReader ins = new InputStreamReader(fis,FileUtil.DEFAULT_CODE_UTF8);
-        BufferedReader read = new BufferedReader(ins);
-        //输出gz
-        FileOutputStream out = new FileOutputStream(FileUtil.DEFAULT_PATH + "\\b.gz");
-        GZIPOutputStream zout = new GZIPOutputStream(out);
-        OutputStreamWriter osw = new OutputStreamWriter(zout,FileUtil.DEFAULT_CODE_UTF8);
-        BufferedWriter bw = new BufferedWriter(osw);
-        String line;
-        while((line = read.readLine()) != null){
+            BufferedReader read = new BufferedReader(ins);
+            //输出gz
+            FileOutputStream out = new FileOutputStream(FileUtil.DEFAULT_PATH + "\\b.gz");
+            GZIPOutputStream zout = new GZIPOutputStream(out);
+            OutputStreamWriter osw = new OutputStreamWriter(zout,FileUtil.DEFAULT_CODE_UTF8);
+            BufferedWriter bw = new BufferedWriter(osw);
+            String line;
+            while((line = read.readLine()) != null){
             PrintUtil.print(line);
             bw.write(line);
         }
@@ -362,6 +360,14 @@ public class FileTest {
         zout.close();
         out.close();
     }
+    public void test18(){
+        List<? super Object> aa = new ArrayList<>();
+        List<? extends A> bbb = new ArrayList<>();
+        aa.add(new A());
+        //concurrent
+//        new Concurre
+    }
+
     private void symmertrice(CharBuffer charBuffer){
         while(charBuffer.hasRemaining()){
             charBuffer.mark();
@@ -371,4 +377,8 @@ public class FileTest {
             charBuffer.put(c2).put(c1);
         }
     }
+}
+class A {}
+class B extends A{
+
 }

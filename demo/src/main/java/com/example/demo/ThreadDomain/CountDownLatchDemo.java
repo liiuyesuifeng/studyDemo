@@ -24,7 +24,7 @@ public class CountDownLatchDemo {
             exec.execute(new TaskPortion(latch));
         }
         PrintUtil.print("Latch all task");
-        exec.shutdownNow();
+        exec.shutdown();
     }
 }
 class TaskPortion implements Runnable{
